@@ -2,7 +2,7 @@
 
 const TodoItem = ({ task, isDone, toggleTodo, deleteTodo }) => {
   const handleToggle = async () => {
-    isDone == "false" ? (isDone = "true") : (isDone = "false");
+    isDone == false ? (isDone = true) : (isDone = false);
     toggleTodo(isDone); // Call toggleTodo with the new status
   };
 
@@ -22,7 +22,7 @@ const TodoItem = ({ task, isDone, toggleTodo, deleteTodo }) => {
       />
       <span
         className={`text-lg ${
-          isDone == "false" ? "text-black" : "line-through text-gray-500"
+          isDone ? "line-through text-gray-500" : "text-black"
         }`}
       >
         <p>{task}</p>

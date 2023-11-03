@@ -19,8 +19,6 @@ const TodoList = ({ selectedDay }) => {
       id: todoId,
       isDone: newIsDone,
     };
-    console.log("daata");
-    console.log(data);
 
     const response = await fetch("/api/todo", {
       method: "PATCH",
@@ -54,7 +52,6 @@ const TodoList = ({ selectedDay }) => {
       if (response.ok) {
         const { todos } = await response.json();
         setTodoList(todos);
-        console.log(todos);
       }
     } catch (error) {
       console.log(error);
@@ -69,9 +66,10 @@ const TodoList = ({ selectedDay }) => {
     const data = {
       email: session?.user?.email,
       task: input,
-      isDone: "false",
+      isDone: false,
       date: selectedDay,
     };
+
     try {
       const response = await fetch("/api/todo", {
         method: "POST",
