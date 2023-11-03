@@ -1,57 +1,48 @@
-import { connectToDatabase } from "@/lib/mongodb";
-import { ObjectId } from "mongodb";
+import Todo from "@/app/models/Todo";
+import dbConnect from "@/lib/mongoose";
 
 export default async (req, res) => {
+  await dbConnect();
   try {
-    // Connect to the database
-    const db = await connectToDatabase();
     switch (req.method) {
       case "POST":
         const data = req.body;
-
-        db.collection("todo").insertOne(data);
-        res.status(200).json({ message: "Nice" });
+        const todo = new Todo(data);
+        const saved = await todo.save();
+        res.status(200).json({ saved });
         break;
 
       case "PATCH":
         try {
-          const updatedId = await db.collection("todo").updateOne(
-            {
-              _id: new ObjectId(req.body.id),
-              email: req.body.email,
-            },
-            { $set: { isDone: req.body.isDone } }
-          );
-          res.status(200).json({ updatedId: updatedId });
-          break;
+          const updatedId = req.body.id;
+          const isDone = req.body.isDone;
+          await Todo.findOneAndUpdate({ _id: updatedId }, { isDone: isDone });
+          res.status(200).json({ updatedId });
         } catch (e) {
           console.log(e);
         }
-
-      case "GET":
-        const todos = await db
-          .collection("todo")
-          .find({
-            email: req.query.email,
-            date: req.query.date,
-          })
-          .toArray();
-        res.status(200).json({ todos });
         break;
 
-      default:
-        res.status(405).end(); // Method Not Allowed
+      case "GET":
+        const todos = await Todo.find({
+          email: req.query.email,
+          date: req.query.date,
+        }).exec();
+        res.status(200).json({ todos });
         break;
 
       case "DELETE":
         try {
-          const deletedId = db.collection("todo").deleteOne({
-            _id: new ObjectId(req.body.id),
-          });
+          const deletedId = req.body.id;
+          await Todo.deleteOne({ _id: deletedId });
           res.status(200).json({ deletedId });
         } catch (e) {
-          print(e);
+          console.log(e);
         }
+        break;
+
+      default:
+        res.status(405).end(); // Method Not Allowed
         break;
     }
   } catch (error) {
