@@ -1,7 +1,6 @@
 import Calendar from "./Calendar";
-import TodoList from "./TodoList";
-const Sidebar = () => {
-  return <Calendar />;
+const Sidebar = ({ selectedDay, setSelectedDay }) => {
+  return <Calendar selectedDay={selectedDay} setSelectedDay={setSelectedDay} />;
 };
 
 export default Sidebar;
