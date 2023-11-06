@@ -4,10 +4,12 @@ import { useSession } from "next-auth/react";
 
 const DailyTimer = ({
   selectedDay,
-  secondsToAdd,
   secondsRemaining,
   setSecondsRemaining,
-  handleReduce,
+  target,
+  setTarget,
+  buttonSelected,
+  setButtonSelected,
 }) => {
   const { data: session, status } = useSession();
 
@@ -22,7 +24,6 @@ const DailyTimer = ({
   }, [secondsRemaining]);
 
   const fetchTimeRemaining = async () => {
-    console.log(selectedDay);
     const data = { email: session?.user?.email, date: selectedDay };
     try {
       let response = await fetch(`/api/time`, {
@@ -54,11 +55,36 @@ const DailyTimer = ({
       body: JSON.stringify(data),
     });
   };
+  const selected = ` ${
+    target == "DailyTimer" ? "bg-blue-400 animate-pulse" : "bg-gray-200"
+  }`;
+
+  const buttonStyle = ` ${
+    buttonSelected ? "bg-blue-400 animate-pulse" : "bg-gray-200"
+  }`;
+
+  // hidden if target is bucket (id length > 20)
+  const hidden = `${target.length > 20 ? "" : "hidden"}`;
+
   return (
     secondsRemaining && (
-      <div>
+      <div
+        className={`bg-white rounded-lg shadow-md p-4 cursor-pointer py-2 px-4 m-2 text-center ${selected}`}
+        onClick={(e) => {
+          e.stopPropagation();
+          setTarget("DailyTimer");
+        }}
+      >
         <p>{secondsRemaining}</p>
-        <button onClick={handleReduce}>Reduce</button>
+        <button
+          className={`bg-white rounded-lg shadow-md p-4 cursor-pointer py-2 px-4 m-2 ${buttonStyle} ${hidden}`}
+          onClick={(e) => {
+            setButtonSelected(!buttonSelected);
+            e.stopPropagation();
+          }}
+        >
+          Start
+        </button>
       </div>
     )
   );

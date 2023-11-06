@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import React, { useState } from "react";
 
-function TimeAdder({ setSecondsToAdd, handleAdd }) {
+function TimeAdder({ setSecondsToAdd, handleAdd, handleReduce }) {
   const hourOptions = [0, 1, 2, 3, 4, 5];
   const minuteOptions = [0, 5, 10, 15, 30];
   const [hourIndex, setHourIndex] = useState(0);
@@ -16,7 +16,6 @@ function TimeAdder({ setSecondsToAdd, handleAdd }) {
 
   const incrementHour = () => {
     setHourIndex((hourIndex + 1) % hourOptions.length);
-    console.log(hourIndex);
   };
 
   const decrementHour = () => {
@@ -34,45 +33,73 @@ function TimeAdder({ setSecondsToAdd, handleAdd }) {
   };
 
   return (
-    <div className="flex flex-col space-y-4">
-      <div className="flex items-center space-x-2">
-        <button
-          onClick={decrementHour}
-          className="px-2 py-1 rounded bg-blue-500 text-white"
-        >
-          -
-        </button>
-        <span className="text-2xl font-bold">{hourOptions[hourIndex]}</span>
-        <button
-          onClick={incrementHour}
-          className="px-2 py-1 rounded bg-blue-500 text-white"
-        >
-          +
-        </button>
-        <span className="text-lg">hours</span>
+    <div className="flex flex-col">
+      <div className="flex flex-row justify-center space-y-4">
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              decrementHour();
+            }}
+            className="px-2 py-1 rounded bg-blue-500 text-white"
+          >
+            -
+          </button>
+          <span className="text-2xl font-bold">{hourOptions[hourIndex]}</span>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              incrementHour();
+            }}
+            className="px-2 py-1 rounded bg-blue-500 text-white"
+          >
+            +
+          </button>
+          <span className="text-lg">hours</span>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              decrementMinute();
+            }}
+            className="px-2 py-1 rounded bg-blue-500 text-white"
+          >
+            -
+          </button>
+          <span className="text-2xl font-bold">
+            {minuteOptions[minuteIndex]}
+          </span>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              incrementMinute();
+            }}
+            className="px-2 py-1 rounded bg-blue-500 text-white"
+          >
+            +
+          </button>
+          <span className="text-lg">minutes</span>
+        </div>
       </div>
-      <div className="flex items-center space-x-2">
+      <div className="flex flex-row justify-center">
         <button
-          onClick={decrementMinute}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleAdd();
+          }}
           className="px-2 py-1 rounded bg-blue-500 text-white"
         >
-          -
+          ADD
         </button>
-        <span className="text-2xl font-bold">{minuteOptions[minuteIndex]}</span>
         <button
-          onClick={incrementMinute}
           className="px-2 py-1 rounded bg-blue-500 text-white"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleReduce();
+          }}
         >
-          +
+          REDUCE
         </button>
-        <span className="text-lg">minutes</span>
       </div>
-      <button
-        onClick={handleAdd}
-        className="px-2 py-1 rounded bg-blue-500 text-white"
-      >
-        ADD
-      </button>
     </div>
   );
 }
