@@ -10,14 +10,15 @@ const Bucket = ({
   target,
   setTarget,
 }) => {
-  const bucketStyle = `py-2 px-4 m-2 text-center  ${
+  const selected = ` ${
     target == id ? "bg-blue-400 animate-pulse" : "bg-gray-200"
   }`;
 
   return (
     <div
-      className={`bg-white rounded-lg shadow-md p-4 cursor-pointer ${bucketStyle}`}
-      onClick={() => {
+      className={`bg-white rounded-lg shadow-md p-4 cursor-pointer py-2 px-4 m-2 text-center ${selected}`}
+      onClick={(e) => {
+        e.stopPropagation();
         setTarget(id);
       }}
     >
